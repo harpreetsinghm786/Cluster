@@ -1,0 +1,583 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cluster/screens/faculty/facultylogin.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+
+import '../../constants.dart';
+import '../../helper/authhandler.dart';
+import '../../helper/responsive.dart';
+
+class facultycreateprofile extends StatefulWidget {
+  String? email, password;
+  facultycreateprofile({Key? key, required this.email, required this.password}) : super(key: key);
+
+  @override
+  _facultycreateprofileState createState() => _facultycreateprofileState(email: this.email, password: this.password);
+}
+
+class _facultycreateprofileState extends State<facultycreateprofile> {
+  String? email, password,facultycode;
+  String? username, title;
+  TextEditingController? _username, _title,_facultycode;
+  final formKey = GlobalKey<FormState>();
+  bool? load = false;
+
+  _facultycreateprofileState({this.email, this.password});
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _username=new TextEditingController();
+    _title=new TextEditingController();
+    _facultycode=new TextEditingController();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
+          children: [
+            Container(
+              height: MediaQuery.of(context).size.height,
+              child: Stack(
+                children: [
+                  Row(
+                    children: [
+                      Responsive.istablet(context)
+                          ? Container()
+                          : Expanded(
+                        flex: 1,
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                    flex: 1,
+                                    child: Container(
+                                      color: b1,
+                                    )),
+                                Expanded(
+                                    flex: 1,
+                                    child: Container(
+                                      color: b2,
+                                    )),
+                                Expanded(
+                                    flex: 1,
+                                    child: Container(
+                                      color: b3,
+                                    )),
+                                Expanded(
+                                    flex: 1,
+                                    child: Container(
+                                      color: b4,
+                                    )),
+                              ],
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child: Container(
+                                child: Column(
+                                  children: [
+                                    Expanded(
+                                      flex: 8,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                              child: Image(
+                                                image: AssetImage(
+                                                  "assets/images/cluster.png",
+                                                ),
+                                                height: 200,
+                                                width: 200,
+                                              )),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Container(
+                                              child: Text(
+                                                "Cluster",
+                                                style: getheadstyle(
+                                                    40,
+                                                    FontWeight.normal,
+                                                    Colors.white),
+                                                softWrap: true,
+                                                textAlign: TextAlign.start,
+                                              )),
+                                          Container(
+                                              child: Text(
+                                                "Project Management System for Faculty",
+                                                style: getsimplestyle(
+                                                    10,
+                                                    FontWeight.normal,
+                                                    Colors.white),
+                                                softWrap: true,
+                                                textAlign: TextAlign.start,
+                                              )),
+                                        ],
+                                      ),
+                                    ),
+
+                                    Expanded(
+                                      flex: 2,
+                                      child: Container(
+                                          alignment: Alignment.center,
+                                          child: Text(
+                                            "Poweredby EE IITR \n © Copyright 2022-2023",
+                                            style: getsimplestyle(
+                                                10,
+                                                FontWeight.normal,
+                                                Colors.white),
+                                            softWrap: true,
+                                            textAlign: TextAlign.center,
+                                          )),
+                                    ),
+
+                                    //9417636424
+                                  ],
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                          flex: 1,
+                          child: Container(
+                            color: Colors.white,
+                            child: Center(
+                              child: Form(
+                                key: formKey,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "Create Profile",
+                                      style: getsimplestyle(
+                                          24, FontWeight.w500, b4),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Text(
+                                      "Enter Required Information to Create Your Account",
+                                      style: getsimplestyle(
+                                          13, FontWeight.w500, b4),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Container(
+                                        height: 60,
+                                        width: 400,
+                                        margin: EdgeInsets.only(
+                                            top: 30,
+                                            left: 0,
+                                            right: 0,
+                                            bottom: 0),
+                                        alignment: Alignment.centerLeft,
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                              flex: 8,
+                                              child: usernamefield(),
+                                            ),
+                                          ],
+                                        )),
+                                    Container(
+                                        height: 60,
+                                        width: 400,
+                                        margin: EdgeInsets.only(
+                                            top: 30,
+                                            left: 0,
+                                            right: 0,
+                                            bottom: 0),
+                                        alignment: Alignment.centerLeft,
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                              flex: 8,
+                                              child: titlefield(),
+                                            ),
+                                          ],
+                                        )),
+                                    Container(
+                                        height: 60,
+                                        width: 400,
+                                        margin: EdgeInsets.only(
+                                            top: 30,
+                                            left: 0,
+                                            right: 0,
+                                            bottom: 0),
+                                        alignment: Alignment.centerLeft,
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                              flex: 8,
+                                              child: facultycodefield(),
+                                            ),
+                                          ],
+                                        )),
+
+                                    Container(
+                                      height: 50,
+                                      width: 400,
+                                      margin: EdgeInsets.only(
+                                          top: 30,
+                                          left: 0,
+                                          right: 0,
+                                          bottom: 0),
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                          BorderRadius.circular(50),
+                                          color: b4),
+                                      child: FlatButton(
+                                        onPressed: () async {
+                                          if (formKey.currentState!
+                                              .validate()) {
+                                            setState(() {
+                                              load = true;
+                                            });
+                                            formKey.currentState!.save();
+
+                                            try {
+                                              final credential = await FirebaseAuth
+                                                  .instance
+                                                  .createUserWithEmailAndPassword(
+                                                email: email!,
+                                                password: password!,
+                                              )
+                                                  .then((value) => {
+                                                FirebaseFirestore
+                                                    .instance
+                                                    .collection("facultydata")
+                                                    .doc(
+                                                    value.user!.uid)
+                                                    .set({
+                                                  "name": username,
+                                                  "title": title,
+                                                  "language":[],
+                                                  "introvideo":"null",
+                                                  "education":[],
+                                                  "availability":false,
+                                                  "cover":"null",
+                                                  "skills":[],
+                                                  "works":[],
+                                                  "uid":FirebaseAuth.instance.currentUser!.uid
+                                                }),
+                                                Loginnow(email,
+                                                    password, context)
+                                              });
+                                            } on FirebaseAuthException catch (e) {
+                                              if (e.code == 'weak-password') {
+                                                setState(() {
+                                                  load = false;
+                                                });
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(new SnackBar(
+                                                    content: Text(
+                                                        "The password provided is too weak.")));
+                                              } else if (e.code ==
+                                                  'email-already-in-use') {
+                                                setState(() {
+                                                  load = false;
+                                                });
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(new SnackBar(
+                                                    content: Text(
+                                                        "The account already exists for that email.")));
+                                              }
+                                            } catch (e) {
+                                              print(e);
+                                            }
+                                          }
+                                        },
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                          BorderRadius.circular(50),
+                                        ),
+                                        child: Text(
+                                          "Done",
+                                          style: getsimplestyle(15,
+                                              FontWeight.normal, Colors.white),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          "Already have an account? ",
+                                          style: getsimplestyle(
+                                              13, FontWeight.w500, Colors.grey),
+                                        ),
+                                        InkWell(
+                                          onTap: () {
+                                            Navigator.push(
+                                                context,
+                                                new MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        facultylogin()));
+                                          },
+                                          child: Text(
+                                            "LogIn",
+                                            style: getsimplestyle(
+                                                13, FontWeight.w500, b4),
+                                          ),
+                                        )
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          )),
+                    ],
+                  ),
+                  Responsive.istablet(context)
+                      ? Stack(
+                    children: [
+                      Container(
+                        height: 60,
+                        child: Row(
+                          children: [
+                            Expanded(
+                                flex: 1,
+                                child: Container(
+                                  color: b1,
+                                )),
+                            Expanded(
+                                flex: 1,
+                                child: Container(
+                                  color: b2,
+                                )),
+                            Expanded(
+                                flex: 1,
+                                child: Container(
+                                  color: b3,
+                                )),
+                            Expanded(
+                                flex: 1,
+                                child: Container(
+                                  color: b4,
+                                )),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        padding: EdgeInsets.all(10),
+                        width: MediaQuery.of(context).size.width,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              flex: 8,
+                              child: Container(
+                                child: Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      height: 40,
+                                      width: 40,
+                                      child: Image.asset(
+                                          "assets/images/cluster.png"),
+                                    ),
+                                    Text(
+                                      "luster",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontStyle: FontStyle.normal),
+                                      softWrap: true,
+                                      textAlign: TextAlign.start,
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  )
+                      : Container(),
+                  load == true
+                      ? Container(
+                    color: glass,
+                    child: Center(
+                      child: Center(
+                          child: CircularProgressIndicator(
+                            color: b4,
+                          )),
+                    ),
+                  )
+                      : Container()
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  TextFormField usernamefield() {
+    return TextFormField(
+      onSaved: (newValue) => username = newValue!,
+      controller: _username,
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Please Enter Username';
+        }
+        return null;
+      },
+      cursorColor: Colors.grey,
+      style: getsimplestyle(14, FontWeight.normal, Colors.grey),
+      decoration: InputDecoration(
+        suffixIcon: Icon(
+          Icons.account_circle_outlined,
+          color: Colors.grey,
+          size: 20,
+        ),
+
+        border: new OutlineInputBorder(
+          borderSide: new BorderSide(color: b4, width: 1.0),
+          borderRadius: BorderRadius.circular(50),
+        ),
+        focusedBorder: new OutlineInputBorder(
+          borderSide: new BorderSide(color: b4, width: 1.0),
+          borderRadius: BorderRadius.circular(50),
+        ),
+        enabledBorder: new OutlineInputBorder(
+          borderSide: new BorderSide(color: b4, width: 1.0),
+          borderRadius: BorderRadius.circular(50),
+        ),
+        errorBorder: new OutlineInputBorder(
+          borderSide: new BorderSide(color: Colors.red, width: 1.0),
+          borderRadius: BorderRadius.circular(50),
+        ),
+        disabledBorder: new OutlineInputBorder(
+          borderSide: new BorderSide(color: b4, width: 1.0),
+          borderRadius: BorderRadius.circular(50),
+        ),
+        // errorStyle: TextStyle(fontSize: 12, height: 0.1),
+        hintStyle: getsimplestyle(14, FontWeight.normal, Colors.grey),
+        hintText: "Username",
+        errorStyle: TextStyle(fontSize: 9, height: 0.5),
+        contentPadding: EdgeInsets.only(left: 11),
+      ),
+    );
+  }
+
+  TextFormField titlefield() {
+    return TextFormField(
+      onSaved: (newValue) => title = newValue!,
+      controller: _title,
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Enter Profile title';
+        }
+        return null;
+      },
+      cursorColor: Colors.grey,
+      style: getsimplestyle(14, FontWeight.normal, Colors.grey),
+      decoration: InputDecoration(
+        suffixIcon: Icon(
+          Icons.star,
+          color: Colors.grey,
+          size: 20,
+        ),
+        border: new OutlineInputBorder(
+          borderSide: new BorderSide(color: b4, width: 1.0),
+          borderRadius: BorderRadius.circular(50),
+        ),
+        focusedBorder: new OutlineInputBorder(
+          borderSide: new BorderSide(color: b4, width: 1.0),
+          borderRadius: BorderRadius.circular(50),
+        ),
+        enabledBorder: new OutlineInputBorder(
+          borderSide: new BorderSide(color: b4, width: 1.0),
+          borderRadius: BorderRadius.circular(50),
+        ),
+        errorBorder: new OutlineInputBorder(
+          borderSide: new BorderSide(color: Colors.red, width: 1.0),
+          borderRadius: BorderRadius.circular(50),
+        ),
+        disabledBorder: new OutlineInputBorder(
+          borderSide: new BorderSide(color: b4, width: 1.0),
+          borderRadius: BorderRadius.circular(50),
+        ),
+        hintStyle: getsimplestyle(14, FontWeight.normal, Colors.grey),
+        hintText: "Title",
+        errorStyle: TextStyle(fontSize: 9, height: 0.5),
+        contentPadding: EdgeInsets.only(left: 11),
+      ),
+    );
+  }
+
+  TextFormField facultycodefield() {
+    return TextFormField(
+      obscureText: true,
+      onSaved: (newValue) => facultycode = newValue!,
+      controller: _facultycode,
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Enter Faculty Code';
+        }
+        return null;
+      },
+      cursorColor: Colors.grey,
+      style: getsimplestyle(14, FontWeight.normal, Colors.grey),
+      decoration: InputDecoration(
+        suffixIcon: Icon(
+          Icons.code,
+          color: Colors.grey,
+          size: 20,
+        ),
+        border: new OutlineInputBorder(
+          borderSide: new BorderSide(color: b4, width: 1.0),
+          borderRadius: BorderRadius.circular(50),
+        ),
+        focusedBorder: new OutlineInputBorder(
+          borderSide: new BorderSide(color: b4, width: 1.0),
+          borderRadius: BorderRadius.circular(50),
+        ),
+        enabledBorder: new OutlineInputBorder(
+          borderSide: new BorderSide(color: b4, width: 1.0),
+          borderRadius: BorderRadius.circular(50),
+        ),
+        errorBorder: new OutlineInputBorder(
+          borderSide: new BorderSide(color: Colors.red, width: 1.0),
+          borderRadius: BorderRadius.circular(50),
+        ),
+        disabledBorder: new OutlineInputBorder(
+          borderSide: new BorderSide(color: b4, width: 1.0),
+          borderRadius: BorderRadius.circular(50),
+        ),
+        hintStyle: getsimplestyle(14, FontWeight.normal, Colors.grey),
+        hintText: "Faculty Code",
+        errorStyle: TextStyle(fontSize: 9, height: 0.5),
+        contentPadding: EdgeInsets.only(left: 11),
+      ),
+    );
+  }
+
+
+
+
+  removeFocus() {
+    FocusScope.of(context).unfocus();
+  }
+}
