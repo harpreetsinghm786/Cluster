@@ -3091,7 +3091,7 @@ class _StudentprofileState extends State<Studentprofile> {
         backgroundColor: b2,
         toolbarHeight: Responsive.isdesktop(context) ? 75 : 60,
         elevation: 3,
-        title: Appbar(),
+        title: Appbar(profile: true,activeindex: -1,),
       ),
       drawer: Responsive.istablet(context) ? Drawerbox() : null,
       body: ListView(

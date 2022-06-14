@@ -152,7 +152,10 @@ class _LandingState extends State<Landing> {
                                 child: FlatButton(
                                     padding: EdgeInsets.all(20),
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(50),),
+
+                                      borderRadius: BorderRadius.circular(50),
+
+                                    ),
 
                                     onPressed: (){
                                       Navigator.push(context, new MaterialPageRoute(builder: (context)=>facultysignin()));

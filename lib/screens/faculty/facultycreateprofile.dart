@@ -21,6 +21,7 @@ class _facultycreateprofileState extends State<facultycreateprofile> {
   TextEditingController? _username, _title,_facultycode;
   final formKey = GlobalKey<FormState>();
   bool? load = false;
+  List codes=[];
 
   _facultycreateprofileState({this.email, this.password});
 
@@ -31,6 +32,7 @@ class _facultycreateprofileState extends State<facultycreateprofile> {
     _username=new TextEditingController();
     _title=new TextEditingController();
     _facultycode=new TextEditingController();
+
   }
 
   @override
@@ -39,395 +41,451 @@ class _facultycreateprofileState extends State<facultycreateprofile> {
 
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          children: [
-            Container(
-              height: MediaQuery.of(context).size.height,
-              child: Stack(
+        child: StreamBuilder<DocumentSnapshot>(
+          stream:FirebaseFirestore.instance.collection("facultydata").doc("codes").snapshots(),
+          builder: ( BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot ) {
+
+            if(snapshot.hasData){
+              DocumentSnapshot doc=snapshot.data!;
+              codes.clear();
+              codes.addAll(doc["list"]);
+              return Column(
                 children: [
-                  Row(
-                    children: [
-                      Responsive.istablet(context)
-                          ? Container()
-                          : Expanded(
-                        flex: 1,
-                        child: Stack(
-                          alignment: Alignment.center,
+                  Container(
+                    height: MediaQuery.of(context).size.height,
+                    child: Stack(
+                      children: [
+                        Container(
+                          height: MediaQuery.of(context).size.height,
+                          width: MediaQuery.of(context).size.width,
+                          child: Row(
+                            children: [
+                              Responsive.istablet(context)
+                                  ? Container()
+                                  : Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      Container(
+                                        height: MediaQuery.of(context).size.height,
+                                        width: MediaQuery.of(context).size.width/2,
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                                flex: 1,
+                                                child: Container(
+                                                  color: b1,
+                                                )),
+                                            Expanded(
+                                                flex: 1,
+                                                child: Container(
+                                                  color: b2,
+                                                )),
+                                            Expanded(
+                                                flex: 1,
+                                                child: Container(
+                                                  color: b3,
+                                                )),
+                                            Expanded(
+                                                flex: 1,
+                                                child: Container(
+                                                  color: b4,
+                                                )),
+                                          ],
+                                        ),
+                                      ),
+                                      Container(
+                                        height: MediaQuery.of(context).size.height,
+                                        width: MediaQuery.of(context).size.width/2,
+                                        child: Column(
+                                          children: [
+                                            Expanded(
+                                              flex: 8,
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                                children: [
+                                                  Container(
+                                                      child: Image(
+                                                        image: AssetImage(
+                                                          "assets/images/cluster.png",
+                                                        ),
+                                                        height: 200,
+                                                        width: 200,
+                                                      )),
+                                                  SizedBox(
+                                                    height: 10,
+                                                  ),
+                                                  Container(
+                                                      child: Text(
+                                                        "Cluster",
+                                                        style: getheadstyle(
+                                                            40,
+                                                            FontWeight.normal,
+                                                            Colors.white),
+                                                        softWrap: true,
+                                                        textAlign: TextAlign.start,
+                                                      )),
+                                                  Container(
+                                                      child: Text(
+                                                        "Project Management System for Faculty",
+                                                        style: getsimplestyle(
+                                                            10,
+                                                            FontWeight.normal,
+                                                            Colors.white),
+                                                        softWrap: true,
+                                                        textAlign: TextAlign.start,
+                                                      )),
+                                                ],
+                                              ),
+                                            ),
+
+                                            Expanded(
+                                              flex: 2,
+                                              child: Container(
+                                                  alignment: Alignment.center,
+                                                  child: Text(
+                                                    "Poweredby EE IITR \n © Copyright 2022-2023",
+                                                    style: getsimplestyle(
+                                                        10,
+                                                        FontWeight.normal,
+                                                        Colors.white),
+                                                    softWrap: true,
+                                                    textAlign: TextAlign.center,
+                                                  )),
+                                            ),
+
+                                            //9417636424
+                                          ],
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                              Expanded(
+                                  flex: 1,
+                                  child: Container(
+                                    color: Colors.white,
+                                    child: Center(
+                                      child: Form(
+                                        key: formKey,
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              "Create Profile",
+                                              style: getsimplestyle(
+                                                  24, FontWeight.w500, b4),
+                                            ),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            Text(
+                                              "Enter Required Information to Create Your Account",
+                                              style: getsimplestyle(
+                                                  13, FontWeight.w500, b4),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            Container(
+                                                height: 60,
+                                                width: 400,
+                                                margin: EdgeInsets.only(
+                                                    top: 30,
+                                                    left: 0,
+                                                    right: 0,
+                                                    bottom: 0),
+                                                alignment: Alignment.centerLeft,
+                                                child: Row(
+                                                  children: [
+                                                    Expanded(
+                                                      flex: 8,
+                                                      child: usernamefield(),
+                                                    ),
+                                                  ],
+                                                )),
+                                            Container(
+                                                height: 60,
+                                                width: 400,
+                                                margin: EdgeInsets.only(
+                                                    top: 30,
+                                                    left: 0,
+                                                    right: 0,
+                                                    bottom: 0),
+                                                alignment: Alignment.centerLeft,
+                                                child: Row(
+                                                  children: [
+                                                    Expanded(
+                                                      flex: 8,
+                                                      child: titlefield(),
+                                                    ),
+                                                  ],
+                                                )),
+                                            Container(
+                                                height: 60,
+                                                width: 400,
+                                                margin: EdgeInsets.only(
+                                                    top: 30,
+                                                    left: 0,
+                                                    right: 0,
+                                                    bottom: 0),
+                                                alignment: Alignment.centerLeft,
+                                                child: Row(
+                                                  children: [
+                                                    Expanded(
+                                                      flex: 8,
+                                                      child: facultycodefield(),
+                                                    ),
+                                                  ],
+                                                )),
+
+                                            Container(
+                                              height: 50,
+                                              width: 400,
+                                              margin: EdgeInsets.only(
+                                                  top: 30,
+                                                  left: 0,
+                                                  right: 0,
+                                                  bottom: 0),
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                  BorderRadius.circular(50),
+                                                  color: b4),
+                                              child: FlatButton(
+                                                onPressed: () async {
+                                                  if (formKey.currentState!
+                                                      .validate()) {
+
+                                                    setState(() {
+                                                      load = true;
+                                                    });
+
+                                                    formKey.currentState!.save();
+
+                                                    if(codes.contains(facultycode)){
+
+                                                      try {
+                                                        final credential = await FirebaseAuth
+                                                            .instance
+                                                            .createUserWithEmailAndPassword(
+                                                          email: email!,
+                                                          password: password!,
+                                                        )
+                                                            .then((value) =>
+                                                        {
+                                                          FirebaseFirestore
+                                                              .instance
+                                                              .collection(
+                                                              "facultydata")
+                                                              .doc(
+                                                              value.user!.uid)
+                                                              .set({
+                                                            "name": username,
+                                                            "title": title,
+                                                            "language": [],
+                                                            "introvideo": "null",
+                                                            "education": [],
+                                                            "availability": false,
+                                                            "cover": "null",
+                                                            "skills": [],
+                                                            "works": [],
+                                                            "facultycode": facultycode,
+                                                            "role": "faculty",
+                                                            "uid": FirebaseAuth
+                                                                .instance
+                                                                .currentUser!
+                                                                .uid
+                                                          }),
+                                                          facultyLoginnow(email,
+                                                              password, context)
+                                                        });
+                                                      } on FirebaseAuthException catch (e) {
+                                                        if (e.code ==
+                                                            'weak-password') {
+                                                          setState(() {
+                                                            load = false;
+                                                          });
+                                                          ScaffoldMessenger.of(
+                                                              context)
+                                                              .showSnackBar(
+                                                              new SnackBar(
+                                                                  content: Text(
+                                                                      "The password provided is too weak.")));
+                                                        } else if (e.code ==
+                                                            'email-already-in-use') {
+                                                          setState(() {
+                                                            load = false;
+                                                          });
+                                                          ScaffoldMessenger.of(
+                                                              context)
+                                                              .showSnackBar(
+                                                              new SnackBar(
+                                                                  content: Text(
+                                                                      "The account already exists for that email.")));
+                                                        }
+                                                      } catch (e) {
+                                                        print(e);
+                                                      }
+                                                    }else{
+                                                      setState(() {
+                                                        load = false;
+                                                      });
+
+                                                      ScaffoldMessenger.of(
+                                                          context)
+                                                          .showSnackBar(
+                                                          new SnackBar(
+                                                              content: Text(
+                                                                  "Faculty code is not valid")));
+                                                    }
+
+
+
+                                                  }
+                                                },
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                  BorderRadius.circular(50),
+                                                ),
+                                                child: Text(
+                                                  "Done",
+                                                  style: getsimplestyle(15,
+                                                      FontWeight.normal, Colors.white),
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: 20,
+                                            ),
+                                            Row(
+                                              mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  "Already have an account? ",
+                                                  style: getsimplestyle(
+                                                      13, FontWeight.w500, Colors.grey),
+                                                ),
+                                                InkWell(
+                                                  onTap: () {
+                                                    Navigator.push(
+                                                        context,
+                                                        new MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                facultylogin()));
+                                                  },
+                                                  child: Text(
+                                                    "LogIn",
+                                                    style: getsimplestyle(
+                                                        13, FontWeight.w500, b4),
+                                                  ),
+                                                )
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  )),
+                            ],
+                          ),
+                        ),
+                        Responsive.istablet(context)
+                            ? Stack(
                           children: [
-                            Row(
-                              children: [
-                                Expanded(
-                                    flex: 1,
-                                    child: Container(
-                                      color: b1,
-                                    )),
-                                Expanded(
-                                    flex: 1,
-                                    child: Container(
-                                      color: b2,
-                                    )),
-                                Expanded(
-                                    flex: 1,
-                                    child: Container(
-                                      color: b3,
-                                    )),
-                                Expanded(
-                                    flex: 1,
-                                    child: Container(
-                                      color: b4,
-                                    )),
-                              ],
+                            Container(
+                              height: 60,
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                      flex: 1,
+                                      child: Container(
+                                        color: b1,
+                                      )),
+                                  Expanded(
+                                      flex: 1,
+                                      child: Container(
+                                        color: b2,
+                                      )),
+                                  Expanded(
+                                      flex: 1,
+                                      child: Container(
+                                        color: b3,
+                                      )),
+                                  Expanded(
+                                      flex: 1,
+                                      child: Container(
+                                        color: b4,
+                                      )),
+                                ],
+                              ),
                             ),
-                            Expanded(
-                              flex: 1,
-                              child: Container(
-                                child: Column(
-                                  children: [
-                                    Expanded(
-                                      flex: 8,
-                                      child: Column(
+                            Container(
+                              padding: EdgeInsets.all(10),
+                              width: MediaQuery.of(context).size.width,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    flex: 8,
+                                    child: Container(
+                                      child: Row(
                                         mainAxisAlignment:
                                         MainAxisAlignment.center,
                                         children: [
                                           Container(
-                                              child: Image(
-                                                image: AssetImage(
-                                                  "assets/images/cluster.png",
-                                                ),
-                                                height: 200,
-                                                width: 200,
-                                              )),
-                                          SizedBox(
-                                            height: 10,
+                                            height: 40,
+                                            width: 40,
+                                            child: Image.asset(
+                                                "assets/images/cluster.png"),
                                           ),
-                                          Container(
-                                              child: Text(
-                                                "Cluster",
-                                                style: getheadstyle(
-                                                    40,
-                                                    FontWeight.normal,
-                                                    Colors.white),
-                                                softWrap: true,
-                                                textAlign: TextAlign.start,
-                                              )),
-                                          Container(
-                                              child: Text(
-                                                "Project Management System for Faculty",
-                                                style: getsimplestyle(
-                                                    10,
-                                                    FontWeight.normal,
-                                                    Colors.white),
-                                                softWrap: true,
-                                                textAlign: TextAlign.start,
-                                              )),
+                                          Text(
+                                            "luster",
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontStyle: FontStyle.normal),
+                                            softWrap: true,
+                                            textAlign: TextAlign.start,
+                                          )
                                         ],
                                       ),
                                     ),
-
-                                    Expanded(
-                                      flex: 2,
-                                      child: Container(
-                                          alignment: Alignment.center,
-                                          child: Text(
-                                            "Poweredby EE IITR \n © Copyright 2022-2023",
-                                            style: getsimplestyle(
-                                                10,
-                                                FontWeight.normal,
-                                                Colors.white),
-                                            softWrap: true,
-                                            textAlign: TextAlign.center,
-                                          )),
-                                    ),
-
-                                    //9417636424
-                                  ],
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                          flex: 1,
-                          child: Container(
-                            color: Colors.white,
-                            child: Center(
-                              child: Form(
-                                key: formKey,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      "Create Profile",
-                                      style: getsimplestyle(
-                                          24, FontWeight.w500, b4),
-                                    ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Text(
-                                      "Enter Required Information to Create Your Account",
-                                      style: getsimplestyle(
-                                          13, FontWeight.w500, b4),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Container(
-                                        height: 60,
-                                        width: 400,
-                                        margin: EdgeInsets.only(
-                                            top: 30,
-                                            left: 0,
-                                            right: 0,
-                                            bottom: 0),
-                                        alignment: Alignment.centerLeft,
-                                        child: Row(
-                                          children: [
-                                            Expanded(
-                                              flex: 8,
-                                              child: usernamefield(),
-                                            ),
-                                          ],
-                                        )),
-                                    Container(
-                                        height: 60,
-                                        width: 400,
-                                        margin: EdgeInsets.only(
-                                            top: 30,
-                                            left: 0,
-                                            right: 0,
-                                            bottom: 0),
-                                        alignment: Alignment.centerLeft,
-                                        child: Row(
-                                          children: [
-                                            Expanded(
-                                              flex: 8,
-                                              child: titlefield(),
-                                            ),
-                                          ],
-                                        )),
-                                    Container(
-                                        height: 60,
-                                        width: 400,
-                                        margin: EdgeInsets.only(
-                                            top: 30,
-                                            left: 0,
-                                            right: 0,
-                                            bottom: 0),
-                                        alignment: Alignment.centerLeft,
-                                        child: Row(
-                                          children: [
-                                            Expanded(
-                                              flex: 8,
-                                              child: facultycodefield(),
-                                            ),
-                                          ],
-                                        )),
-
-                                    Container(
-                                      height: 50,
-                                      width: 400,
-                                      margin: EdgeInsets.only(
-                                          top: 30,
-                                          left: 0,
-                                          right: 0,
-                                          bottom: 0),
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                          BorderRadius.circular(50),
-                                          color: b4),
-                                      child: FlatButton(
-                                        onPressed: () async {
-                                          if (formKey.currentState!
-                                              .validate()) {
-                                            setState(() {
-                                              load = true;
-                                            });
-                                            formKey.currentState!.save();
-
-                                            try {
-                                              final credential = await FirebaseAuth
-                                                  .instance
-                                                  .createUserWithEmailAndPassword(
-                                                email: email!,
-                                                password: password!,
-                                              )
-                                                  .then((value) => {
-                                                FirebaseFirestore
-                                                    .instance
-                                                    .collection("facultydata")
-                                                    .doc(
-                                                    value.user!.uid)
-                                                    .set({
-                                                  "name": username,
-                                                  "title": title,
-                                                  "language":[],
-                                                  "introvideo":"null",
-                                                  "education":[],
-                                                  "availability":false,
-                                                  "cover":"null",
-                                                  "skills":[],
-                                                  "works":[],
-                                                  "uid":FirebaseAuth.instance.currentUser!.uid
-                                                }),
-                                                Loginnow(email,
-                                                    password, context)
-                                              });
-                                            } on FirebaseAuthException catch (e) {
-                                              if (e.code == 'weak-password') {
-                                                setState(() {
-                                                  load = false;
-                                                });
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(new SnackBar(
-                                                    content: Text(
-                                                        "The password provided is too weak.")));
-                                              } else if (e.code ==
-                                                  'email-already-in-use') {
-                                                setState(() {
-                                                  load = false;
-                                                });
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(new SnackBar(
-                                                    content: Text(
-                                                        "The account already exists for that email.")));
-                                              }
-                                            } catch (e) {
-                                              print(e);
-                                            }
-                                          }
-                                        },
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                          BorderRadius.circular(50),
-                                        ),
-                                        child: Text(
-                                          "Done",
-                                          style: getsimplestyle(15,
-                                              FontWeight.normal, Colors.white),
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 20,
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          "Already have an account? ",
-                                          style: getsimplestyle(
-                                              13, FontWeight.w500, Colors.grey),
-                                        ),
-                                        InkWell(
-                                          onTap: () {
-                                            Navigator.push(
-                                                context,
-                                                new MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        facultylogin()));
-                                          },
-                                          child: Text(
-                                            "LogIn",
-                                            style: getsimplestyle(
-                                                13, FontWeight.w500, b4),
-                                          ),
-                                        )
-                                      ],
-                                    )
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
                             ),
-                          )),
-                    ],
-                  ),
-                  Responsive.istablet(context)
-                      ? Stack(
-                    children: [
-                      Container(
-                        height: 60,
-                        child: Row(
-                          children: [
-                            Expanded(
-                                flex: 1,
-                                child: Container(
-                                  color: b1,
-                                )),
-                            Expanded(
-                                flex: 1,
-                                child: Container(
-                                  color: b2,
-                                )),
-                            Expanded(
-                                flex: 1,
-                                child: Container(
-                                  color: b3,
-                                )),
-                            Expanded(
-                                flex: 1,
-                                child: Container(
+                          ],
+                        )
+                            : Container(),
+                        load == true
+                            ? Container(
+                          color: glass,
+                          child: Center(
+                            child: Center(
+                                child: CircularProgressIndicator(
                                   color: b4,
                                 )),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        padding: EdgeInsets.all(10),
-                        width: MediaQuery.of(context).size.width,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Expanded(
-                              flex: 8,
-                              child: Container(
-                                child: Row(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      height: 40,
-                                      width: 40,
-                                      child: Image.asset(
-                                          "assets/images/cluster.png"),
-                                    ),
-                                    Text(
-                                      "luster",
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontStyle: FontStyle.normal),
-                                      softWrap: true,
-                                      textAlign: TextAlign.start,
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  )
-                      : Container(),
-                  load == true
-                      ? Container(
-                    color: glass,
-                    child: Center(
-                      child: Center(
-                          child: CircularProgressIndicator(
-                            color: b4,
-                          )),
+                          ),
+                        )
+                            : Container()
+                      ],
                     ),
-                  )
-                      : Container()
+                  ),
                 ],
-              ),
-            ),
-          ],
+              );
+            }
+
+            return Container(
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+                child: Center(
+                    child: CircularProgressIndicator(
+                      color: b4,
+                    )));
+
+
+          }
         ),
       ),
     );
@@ -535,6 +593,8 @@ class _facultycreateprofileState extends State<facultycreateprofile> {
       validator: (value) {
         if (value == null || value.isEmpty) {
           return 'Enter Faculty Code';
+        } if(codes.contains(facultycode)){
+          return 'Wrong faculty code';
         }
         return null;
       },

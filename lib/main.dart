@@ -23,7 +23,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return FutureBuilder(
         future: _initialization,
-
         builder: (context, snapshot) {
           // Check for Errors
           if (snapshot.hasError) {
@@ -45,8 +44,6 @@ class MyApp extends StatelessWidget {
           ));
 
           return MaterialApp(
-
-
             title: 'Cluster',
             debugShowCheckedModeBanner: false,
             theme: ThemeData(
