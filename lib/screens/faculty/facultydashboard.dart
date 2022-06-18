@@ -26,7 +26,7 @@ class _facultydashboardState extends State<facultydashboard> {
   final newprojectform = GlobalKey<FormState>();
   final techstackformKey = GlobalKey<FormState>();
   List techstack = [];
-  String dropdownValueyear = 'First Year';
+  String dropdownValueyear = 'Under Graduation';
   String cost="Unpaid";
   String? projecttitle, projectdes, link, tech;
   TextEditingController? _projecttitle, _projectdes, _link, _tech,_moneyperhr;
@@ -242,7 +242,7 @@ class _facultydashboardState extends State<facultydashboard> {
 
                                                     children: [
                                                       Text(
-                                                        "   Money Per Hour",
+                                                        "   Monthly Stipend",
                                                         style: getsimplestyle(
                                                             13,
                                                             FontWeight.w500,
@@ -269,7 +269,7 @@ class _facultydashboardState extends State<facultydashboard> {
                                                   ),
 
                                                   Text(
-                                                    "   I am looking for students of year",
+                                                    "   I am looking for students from",
                                                     style: getsimplestyle(
                                                         13,
                                                         FontWeight.normal,
@@ -323,7 +323,7 @@ class _facultydashboardState extends State<facultydashboard> {
                                                               dropdownValueyear = newValue!;
                                                             });
                                                           },
-                                                          items: <String>['First Year', 'Second Year', 'Third Year', 'Fourth Year','Any Year']
+                                                          items: <String>['Under Graduation', 'Post Graduation', 'PHD','Any Course']
                                                               .map<DropdownMenuItem<String>>((String value) {
                                                             return DropdownMenuItem<String>(
                                                               value: value,
@@ -641,6 +641,8 @@ class _facultydashboardState extends State<facultydashboard> {
                                                 "postedby":FirebaseAuth.instance.currentUser!.uid,
                                                 "key":key,
                                                 "date":datetime,
+                                                "saved":[],
+                                                "proposals":[],
                                                 "status":"open"
                                               }).then((value) => {
                                                 setstate(() {
@@ -707,6 +709,7 @@ class _facultydashboardState extends State<facultydashboard> {
       backgroundColor: pagegrey,
       appBar: AppBar(
         backgroundColor: b2,
+        centerTitle: true,
         toolbarHeight: Responsive.isdesktop(context) ? 75 : 60,
         elevation: 3,
         title: Appbar(profile: false,activeindex: 0,),
@@ -1016,7 +1019,7 @@ class _facultydashboardState extends State<facultydashboard> {
 
                                                 if(activeindex==1){
 
-                                                  return filtereddocs[index]["postedby"]==FirebaseAuth.instance.currentUser!.uid && filtereddocs[index]["status"]=="open"? FlatButton(
+                                                  return filtereddocs[index]["postedby"]==FirebaseAuth.instance.currentUser!.uid? FlatButton(
 
                                                     hoverColor: glase,
                                                     splashColor: Colors.white,
@@ -1899,7 +1902,7 @@ class _facultydashboardState extends State<facultydashboard> {
       controller: _moneyperhr,
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return 'Enter Money per Hr';
+          return 'Enter Monthly Stipend';
         }
         return null;
       },
@@ -1932,7 +1935,7 @@ class _facultydashboardState extends State<facultydashboard> {
           borderRadius: BorderRadius.circular(50),
         ),
         hintStyle: getsimplestyle(14, FontWeight.normal, Colors.grey),
-        hintText: "Money per hr (In Rs)",
+        hintText: "Monthly Stipend (In Rs)",
         errorStyle: TextStyle(fontSize: 9, height: 0.5),
         contentPadding: EdgeInsets.only(left: 11),
       ),

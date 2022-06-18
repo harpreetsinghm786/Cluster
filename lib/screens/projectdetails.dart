@@ -194,7 +194,7 @@ class _projectdetailsState extends State<projectdetails> {
                                                         Icon(
                                                           Icons.monetization_on,
                                                           color: textcolor,),
-                                                        Text(" Rs ${doc["moneyperhr"]}",
+                                                        Text(" Rs ${doc["moneyperhr"]} /Month",
                                                           style: getsimplestyle(
                                                               14,
                                                               FontWeight.w500,
@@ -230,7 +230,7 @@ class _projectdetailsState extends State<projectdetails> {
                                                     ),
 
                                                     Text(
-                                                      "         I am looking for Students \n         of ${doc["entrylevel"]}",
+                                                      "         I am looking for Students \n         from ${doc["entrylevel"]}",
                                                       style: getsimplestyle(
                                                           12, FontWeight.w300,
                                                           Colors.grey),)

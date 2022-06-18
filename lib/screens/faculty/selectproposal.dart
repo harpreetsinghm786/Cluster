@@ -26,7 +26,7 @@ class _selectproposalState extends State<selectproposal> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    stream1=FirebaseFirestore.instance.collection("proposals").where("projectkey",isEqualTo: projectkey);
+    stream1=FirebaseFirestore.instance.collection("proposals").orderBy("postdate",descending: true);
   }
 
 
@@ -49,7 +49,12 @@ class _selectproposalState extends State<selectproposal> {
           builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
 
             if(snapshot.hasData) {
-              List docs=snapshot.data!.docs;
+              List docs = [];
+              for (int i = 0; i < snapshot.data!.docs.length; i++) {
+                if (snapshot.data!.docs[i]["projectkey"]==projectkey){
+                  docs.add(snapshot.data!.docs[i]);
+              }
+            }
 
               return ListView(
                 shrinkWrap: true,
@@ -104,211 +109,266 @@ class _selectproposalState extends State<selectproposal> {
                                                child: Column(
                                                  crossAxisAlignment: CrossAxisAlignment.start,
                                                  children: [
-                                                   Row(
-                                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                     children: [
-                                                       Text("Team: ",style: getsimplestyle(14, FontWeight.w500, textcolor),),
-                                                       Row(
-                                                         children: [
-                                                           Text("Posted: ",style: getsimplestyle(13, FontWeight.w300, Colors.grey),),
-                                                           Text("${convertToAgo(DateTime.parse(docs[index]["postdate"]))}",style: getsimplestyle(13, FontWeight.w500, b3),),
-                                                         ],
-                                                       )
-                                                     ],
-                                                   ),
-                                                   SizedBox(height: 5,),
                                                    Container(
-                                                     height: 70,
-                                                     padding: EdgeInsets.only(top: 10,bottom: 10,right: 30),
-                                                     child:  Row(
+
+                                                     padding: EdgeInsets.all(10),
+                                                     child: Column(
+                                                       crossAxisAlignment: CrossAxisAlignment.start,
                                                        children: [
-                                                         Expanded(
-                                                           flex:1,
-                                                           child: Container(
-                                                             height: 53,
-                                                             child: ListView.builder(
-                                                                 scrollDirection: Axis.horizontal,
-                                                                 shrinkWrap: true,
-                                                                 itemCount: docs[index]["team"].length,
-                                                                 itemBuilder: (context,ind){
+                                                         Row(
+                                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                           children: [
+                                                             Row(
+                                                               children: [
+                                                                 Icon(Icons.group_add,color: b3,size: 20,),
+                                                                 SizedBox(width: 5,),
+                                                                 Text("Team: ",style: getsimplestyle(13, FontWeight.w500, textcolor),),
+                                                               ],
+                                                             ),
+                                                             Column(
+                                                               crossAxisAlignment: CrossAxisAlignment.end,
+                                                               children: [
 
+                                                                 Row(
+                                                                   children: [
 
+                                                                     docs[index]["status"]!="pending"?
+                                                                     docs[index]["status"]=="selected"?Chip(label:Text("Selected",style: getsimplestyle(12, FontWeight.w300, Colors.white)),
+                                                                       backgroundColor: Colors.green.withOpacity(0.9),
+                                                                     ):Chip(label:Text("Rejected",style: getsimplestyle(12, FontWeight.w300, Colors.white)),
+                                                                       backgroundColor: Colors.red.withOpacity(0.8),
+                                                                     )
+                                                                         :
 
-                                                                   return  MouseRegion(
-                                                                     cursor: SystemMouseCursors.click,
-                                                                     child: GestureDetector(
-                                                                       onTap: (){
-                                                                         Navigator.push(context, new MaterialPageRoute(builder: (context)=>profileviewer(uid: docs[index]["team"][ind]["uid"],role: "student",)));
-                                                                       },
-                                                                       child: Container(
-                                                                         margin: EdgeInsets.symmetric(horizontal: 3),
-                                                                         child: Stack(
-                                                                           children: [
-                                                                             Container(
-                                                                               padding: EdgeInsets.all(10),
-                                                                               height: 53,
-                                                                               width: 52,
-                                                                               decoration: BoxDecoration(
-                                                                                 color: b3,
-                                                                                 borderRadius: BorderRadius.circular(100),
-                                                                                 border: Border.all(width: 0.7,color: b4,),
-
-                                                                               ),
-
-                                                                               child: Center(child: Text(profilepic(docs[index]["team"][ind]["name"]),style: getsimplestyle(18, FontWeight.w600, Colors.white),)),
-                                                                             ),
-
-                                                                             docs[index]["groupleader"]==docs[index]["team"][ind]["uid"]?Container(
-                                                                               alignment: Alignment.bottomRight,
-                                                                               height: 57,
-                                                                               width: 57,
-                                                                               child: Container(
-                                                                                 height: 20,
-                                                                                 width: 20,
-                                                                                 decoration: BoxDecoration(
-                                                                                     color: b5,
-                                                                                     borderRadius: BorderRadius.circular(20)
-                                                                                 ),
-                                                                                 child: Center(
-                                                                                   child: Text("GL",style: getsimplestyle(12,FontWeight.w500,b1),),
-                                                                                 ),
-                                                                               ),
-                                                                             ):Container()
-
-                                                                           ],
-                                                                         ),
-                                                                       ),
+                                                                     Chip(label:Text("Pending",style: getsimplestyle(12, FontWeight.w300, textcolor)),
+                                                                       backgroundColor: b5,
                                                                      ),
-                                                                   );
-                                                                 }),
 
-                                                           ),
-                                                         ),
-                                                       ],
-                                                     ),
-                                                   ),
-
-                                                   SizedBox(height: 15,),
-                                                   Row(
-                                                     children: [
-                                                       Text("Starting Date: ",style: getsimplestyle(14, FontWeight.w500, textcolor),),
-                                                       Text("${DateFormat('dd-MM-yyyy').format(new DateTime.fromMillisecondsSinceEpoch(docs[index]["startdate"].seconds*1000))}",style: getsimplestyle(13, FontWeight.w500, b3),),
-                                                     ],
-                                                   ),
-
-
-                                                   SizedBox(height: 15,),
-
-                                                   Row(
-                                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                     children: [
-                                                       Text("Commitments",style: getsimplestyle(14, FontWeight.w500, textcolor),),
-                                                       Row(
-                                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                         children: [
-                                                           Text("Net Duration: ",style: getsimplestyle(13, FontWeight.w300, Colors.grey),),
-                                                           Text(docs[index]["duration"].toString()+" Days" ,style: getsimplestyle(13, FontWeight.w500, textcolor),)
-                                                         ],
-                                                       ),
-                                                     ],
-                                                   ),
-                                                   SizedBox(height: 10,),
-
-                                                   Container(
-                                                     decoration: BoxDecoration(
-                                                       color: Colors.white,
-                                                       borderRadius: BorderRadius.circular(7),
-
-                                                       border: Border.all(width: 0.7,color: finalgrey),
-                                                     ),
-                                                     child: ListView.builder(
-                                                         shrinkWrap: true,
-                                                         itemCount: docs[index]["commitments"].length,
-                                                         itemBuilder: (context, ind){
-                                                           return Column(
-                                                             crossAxisAlignment: CrossAxisAlignment.start,
-                                                             children: [
-                                                               Container(
-
-                                                                 decoration: BoxDecoration(
-                                                                   color: Colors.white,
-                                                                   borderRadius: BorderRadius.circular(7),
-
+                                                                     SizedBox(width: 10,),
+                                                                     Text("Posted: ",style: getsimplestyle(12, FontWeight.w300, Colors.grey),),
+                                                                     Text("${convertToAgo(DateTime.parse(docs[index]["postdate"]))}",style: getsimplestyle(12, FontWeight.w500, Colors.grey),),
+                                                                   ],
                                                                  ),
 
-                                                                 padding: EdgeInsets.all(20),
-                                                                 child: Column(
+
+
+                                                               ],
+                                                             )
+                                                           ],
+                                                         ),
+                                                         SizedBox(height: 5,),
+                                                         Container(
+                                                           height: 70,
+                                                           padding: EdgeInsets.only(top: 10,bottom: 10,right: 30),
+                                                           child:  Row(
+                                                             children: [
+                                                               Expanded(
+                                                                 flex:1,
+                                                                 child: Container(
+                                                                   height: 53,
+                                                                   child: ListView.builder(
+                                                                       scrollDirection: Axis.horizontal,
+                                                                       shrinkWrap: true,
+                                                                       itemCount: docs[index]["team"].length,
+                                                                       itemBuilder: (context,ind){
+
+
+
+                                                                         return  MouseRegion(
+                                                                           cursor: SystemMouseCursors.click,
+                                                                           child: GestureDetector(
+                                                                             onTap: (){
+                                                                               Navigator.push(context, new MaterialPageRoute(builder: (context)=>profileviewer(uid: docs[index]["team"][ind]["uid"],role: "student",)));
+                                                                             },
+                                                                             child: Container(
+                                                                               margin: EdgeInsets.symmetric(horizontal: 3),
+                                                                               child: Stack(
+                                                                                 children: [
+                                                                                   Container(
+                                                                                     padding: EdgeInsets.all(10),
+                                                                                     height: 53,
+                                                                                     width: 52,
+                                                                                     decoration: BoxDecoration(
+                                                                                       color: b3,
+                                                                                       borderRadius: BorderRadius.circular(100),
+                                                                                       border: Border.all(width: 0.7,color: b4,),
+
+                                                                                     ),
+
+                                                                                     child: Center(child: Text(profilepic(docs[index]["team"][ind]["name"]),style: getsimplestyle(18, FontWeight.w600, Colors.white),)),
+                                                                                   ),
+
+                                                                                   docs[index]["groupleader"]==docs[index]["team"][ind]["uid"]?Container(
+                                                                                     alignment: Alignment.bottomRight,
+                                                                                     height: 57,
+                                                                                     width: 57,
+                                                                                     child: Container(
+                                                                                       height: 20,
+                                                                                       width: 20,
+                                                                                       decoration: BoxDecoration(
+                                                                                           color: b5,
+                                                                                           borderRadius: BorderRadius.circular(20)
+                                                                                       ),
+                                                                                       child: Center(
+                                                                                         child: Text("GL",style: getsimplestyle(12,FontWeight.w500,b1),),
+                                                                                       ),
+                                                                                     ),
+                                                                                   ):Container()
+
+                                                                                 ],
+                                                                               ),
+                                                                             ),
+                                                                           ),
+                                                                         );
+                                                                       }),
+
+                                                                 ),
+                                                               ),
+                                                             ],
+                                                           ),
+                                                         ),
+
+                                                         SizedBox(height: 15,),
+                                                         Row(
+                                                           children: [
+                                                             Icon(Icons.calendar_today_rounded,color: b3,size: 20,),
+                                                             SizedBox(width: 5,),
+                                                             Text("Starting:  ",style: getsimplestyle(13, FontWeight.w500, textcolor),),
+                                                             Text("${DateFormat('dd-MM-yyyy').format(new DateTime.fromMillisecondsSinceEpoch(docs[index]["startdate"].seconds*1000))}",style: getsimplestyle(13, FontWeight.w500, b3),),
+                                                           ],
+                                                         ),
+
+                                                         SizedBox(height: 15,),
+
+                                                         Row(
+                                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                           children: [
+
+                                                             Row(
+                                                               children: [
+                                                                 Icon(Icons.check_circle,color: b3,size: 20,),
+                                                                 SizedBox(width: 5,),
+                                                                 Text("Commitments",style: getsimplestyle(13, FontWeight.w500, textcolor),),
+                                                               ],
+                                                             ),
+                                                             Row(
+                                                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                               children: [
+                                                                 Text("Net Duration: ",style: getsimplestyle(13, FontWeight.w300, Colors.grey),),
+                                                                 Text(docs[index]["duration"].toString()+" Days" ,style: getsimplestyle(13, FontWeight.w500, textcolor),)
+                                                               ],
+                                                             ),
+                                                           ],
+                                                         ),
+                                                         SizedBox(height: 20,),
+
+                                                         Container(
+                                                           decoration: BoxDecoration(
+                                                             color: Colors.white,
+                                                             borderRadius: BorderRadius.circular(7),
+
+                                                             border: Border.all(width: 0.7,color: finalgrey),
+                                                           ),
+                                                           child: ListView.builder(
+                                                               shrinkWrap: true,
+                                                               itemCount: docs[index]["commitments"].length,
+                                                               itemBuilder: (context, ind){
+                                                                 return Column(
                                                                    crossAxisAlignment: CrossAxisAlignment.start,
                                                                    children: [
                                                                      Container(
-                                                                       child: Row(
+
+                                                                       decoration: BoxDecoration(
+                                                                         color: Colors.white,
+                                                                         borderRadius: BorderRadius.circular(7),
+
+                                                                       ),
+
+                                                                       padding: EdgeInsets.all(20),
+                                                                       child: Column(
+                                                                         crossAxisAlignment: CrossAxisAlignment.start,
                                                                          children: [
-                                                                           Text(
-                                                                             docs[index]["commitments"][ind]["title"],
-                                                                             style: getsimplestyle(
-                                                                                 14, FontWeight.w500,
-                                                                                 textcolor),),
                                                                            Container(
-                                                                             alignment: Alignment.topRight,
                                                                              child: Row(
-                                                                               mainAxisAlignment: MainAxisAlignment.end,
                                                                                children: [
-                                                                                 Icon(Icons.timer,color: Colors.grey,),
-                                                                                 SizedBox(width: 10,),
-                                                                                 Text(docs[index]["commitments"][ind]["duration"]+" Days",style: getsimplestyle(13, FontWeight.w500, textcolor),)
+                                                                                 Text(
+                                                                                   docs[index]["commitments"][ind]["title"],
+                                                                                   style: getsimplestyle(
+                                                                                       13, FontWeight.w500,
+                                                                                       textcolor),),
+                                                                                 Container(
+                                                                                   alignment: Alignment.topRight,
+                                                                                   child: Row(
+                                                                                     mainAxisAlignment: MainAxisAlignment.end,
+                                                                                     children: [
+                                                                                       Icon(Icons.timer,color: Colors.grey,size: 20,),
+                                                                                       SizedBox(width: 5,),
+                                                                                       Text(docs[index]["commitments"][ind]["duration"]+" Days",style: getsimplestyle(12, FontWeight.w300, Colors.grey),)
 
+                                                                                     ],
+                                                                                   ),
+                                                                                 )
                                                                                ],
+                                                                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                              ),
-                                                                           )
+                                                                           ),
+                                                                           SizedBox(height: 5,),
+
+                                                                           Container(
+                                                                             child: Text(
+                                                                               docs[index]["commitments"][ind]["description"],
+                                                                               style: getsimplestyle(
+                                                                                   12,
+                                                                                   FontWeight
+                                                                                       .w300,
+                                                                                   textcolor),
+                                                                               textAlign: TextAlign.left,
+                                                                               maxLines: null,
+
+                                                                             ),
+                                                                           ),
+
+
                                                                          ],
-                                                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                        ),
                                                                      ),
-                                                                     SizedBox(height: 10,),
-
-                                                                     Container(
-                                                                       child: Text(
-                                                                         docs[index]["commitments"][ind]["description"],
-                                                                         style: getsimplestyle(
-                                                                             13,
-                                                                             FontWeight
-                                                                                 .w300,
-                                                                             textcolor),
-                                                                         textAlign: TextAlign.left,
-                                                                         maxLines: null,
-
-                                                                       ),
-                                                                     ),
-
-
+                                                                     ind!=docs[index]["commitments"].length-1?Container(
+                                                                         child: Container(
+                                                                           height: 0.7,
+                                                                           width: maxWidth,
+                                                                           color: finalgrey,
+                                                                         )):Container(),
                                                                    ],
-                                                                 ),
-                                                               ),
-                                                               index!=docs[index]["commitments"].length-1?Container(
-                                                                   child: Container(
-                                                                     height: 0.7,
-                                                                     width: maxWidth,
-                                                                     color: finalgrey,
-                                                                   )):Container(),
-                                                             ],
-                                                           );
-                                                         }),
-                                                   ),
+                                                                 );
+                                                               }),
+                                                         ),
 
-                                                   SizedBox(height: 20,),
-                                                   Text("Experiences",style: getsimplestyle(14, FontWeight.w500, textcolor),),
-                                                   SizedBox(height: 10,),
-                                                   Text(docs[index]["experiencedes"],style: getsimplestyle(13, FontWeight.w500, Colors.grey),),
-                                                   SizedBox(height: 20,),
-                                                   Row(
-                                                     children: [
-                                                       Icon(Icons.link,color: Colors.grey,),
-                                                       SizedBox(width: 10,),
-                                                       Text(docs[index]["experiencelink"],style: getsimplestyle(13, FontWeight.w500, Colors.grey),),
-                                                     ],
-                                                   ),
+                                                         SizedBox(height: 20,),
+                                                         Row(
+                                                           children: [
+                                                             Icon(Icons.grade_outlined,color: b3,size: 20,),
+                                                             SizedBox(width: 5,),
+                                                             Text("Experiences",style: getsimplestyle(13, FontWeight.w500, textcolor),),
+                                                           ],
+                                                         ),
+                                                         SizedBox(height: 10,),
+                                                         Text(docs[index]["experiencedes"],style: getsimplestyle(13, FontWeight.w300, textcolor),textAlign: TextAlign
+                                                             .left,
+                                                           maxLines: null,),
+                                                         SizedBox(height: 20,),
+                                                         Row(
+                                                           children: [
+                                                             Icon(Icons.link,color: b3,size: 20,),
+                                                             SizedBox(width: 5,),
+                                                             Text(docs[index]["experiencelink"],style: getsimplestyle(12, FontWeight.w300, textcolor),),
+                                                           ],
+                                                         ),
 
-                                                   SizedBox(height: 20,),
+
+                                                       ],
+                                                     ),
+
+                                                   ),
 
                                                    Row(
                                                      mainAxisAlignment: MainAxisAlignment.end,

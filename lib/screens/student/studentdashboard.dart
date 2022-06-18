@@ -54,7 +54,7 @@ class _studentdashboardState extends State<studentdashboard> {
     _search = new TextEditingController();
     stream1=FirebaseFirestore.instance.collection("studentdata").doc(FirebaseAuth.instance.currentUser!.uid);
     stream2=FirebaseFirestore.instance.collection("projects").orderBy("date",descending: true);
-    stream3=FirebaseFirestore.instance.collection("proposals");
+    stream3=FirebaseFirestore.instance.collection("proposals").orderBy("postdate",descending: true);
 
   }
   _studentdashboardState({required this.active});
@@ -66,6 +66,7 @@ class _studentdashboardState extends State<studentdashboard> {
       backgroundColor: pagegrey,
       appBar: AppBar(
         backgroundColor: b2,
+        centerTitle: true,
         toolbarHeight: Responsive.isdesktop(context) ? 75 : 60,
         elevation: 3,
         title: Appbar(profile: false,activeindex: active,),
@@ -960,9 +961,6 @@ class _studentdashboardState extends State<studentdashboard> {
                   );
                 }
               }else if(active==1){
-                return Text("workspace");
-
-              }else if(active==2){
 
                   if(snapshot.hasData) {
                     DocumentSnapshot doc=snapshot.data!;

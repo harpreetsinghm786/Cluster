@@ -706,7 +706,6 @@ class _proposalState extends State<proposal> {
 
                         Container(
                           width: maxWidth,
-                          height: maxWidth/2,
                           margin: EdgeInsets.symmetric(horizontal: Responsive.istablet(context)? 10:0),
                           decoration: BoxDecoration(
                             border: Border.all(width: 0.7,color: finalgrey,),
@@ -714,6 +713,7 @@ class _proposalState extends State<proposal> {
                             color: Colors.white
                           ),
                           child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Responsive.istablet(context)?Container():Expanded(
                                 flex:1,
@@ -725,9 +725,11 @@ class _proposalState extends State<proposal> {
                                   ),
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       SizedBox(height: 20,),
                                       Container(
+                                        
                                         width: maxWidth/4,
                                         decoration: BoxDecoration(
                                             borderRadius: BorderRadius.only(topRight: Radius.circular(7),topLeft: Radius.circular(7)),
@@ -776,11 +778,11 @@ class _proposalState extends State<proposal> {
                               Expanded(
                                 flex:3,
                                 child: Stack(
+
                                   children: [
                                     Container(
-                                      height: maxWidth/2-2,
                                       color: glase,
-
+                                      height: maxWidth/2,
                                       child: ListView(
                                         shrinkWrap: true,
                                         scrollDirection: Axis.vertical,
@@ -831,7 +833,6 @@ class _proposalState extends State<proposal> {
                                                               alignment: Alignment.bottomCenter,
                                                               children: [
                                                                 Container(
-                                                                  height: maxWidth/2-2,
 
 
                                                                   child: ListView(
@@ -952,16 +953,16 @@ class _proposalState extends State<proposal> {
                                                                                             child: IconButton(
                                                                                               onPressed:(){
 
-
-
                                                                                                if(selectedbools[inm]==false){
                                                                                                  setState(() {
-                                                                                                   selectedmembers.add(students[inm]);
-                                                                                                   selectedbools[inm]=true;
 
+                                                                                                   selectedmembers.add(students[inm]);
+
+                                                                                                   selectedbools[inm]=true;
                                                                                                    hoverlist.clear();
                                                                                                    for(int i=0;i<selectedmembers.length;i++){
                                                                                                      hoverlist.add(false);
+                                                                                                     print(selectedmembers[i]["name"]);
                                                                                                    }
                                                                                                  });
                                                                                                }
@@ -979,12 +980,15 @@ class _proposalState extends State<proposal> {
                                                                                     );
                                                                                   }),
                                                                             ),
+
+                                                                            SizedBox(height: 70,),
                                                                           ],
                                                                         ),
                                                                       ),
-                                                                      SizedBox(height: 70,),
+
                                                                     ],
                                                                   ),
+                                                                  height: maxWidth/2,
                                                                 ),
                                                                 Container(
                                                                   height: 70,
@@ -1001,99 +1005,98 @@ class _proposalState extends State<proposal> {
                                                                       Expanded(
                                                                         flex:1,
                                                                         child: Container(
-                                                                          height: 55,
+                                                                          height: 60,
 
                                                                           margin: EdgeInsets.only(left: 30),
                                                                           color: Colors.white,
                                                                           child: ListView.builder(
-                                                                            scrollDirection: Axis.horizontal,
-                                                                            shrinkWrap: true,
+                                                                              physics: ScrollPhysics(),
+                                                                              scrollDirection: Axis.horizontal,
+                                                                              shrinkWrap: true,
                                                                               itemCount: selectedmembers.length,
                                                                               itemBuilder: (context,index){
 
-
-
-                                                                              int inm=0;
-                                                                              for(int i=0;i<students.length;i++){
-                                                                                if(students[i]["uid"]==selectedmembers[index]["uid"]){
-                                                                                  inm=i;
+                                                                                int inm=0;
+                                                                                for(int i=0;i<students.length;i++){
+                                                                                  if(students[i]["uid"]==selectedmembers[index]["uid"]){
+                                                                                    inm=i;
+                                                                                  }
                                                                                 }
-                                                                              }
 
-                                                                            return  MouseRegion(
-                                                                              onEnter: (value){
-                                                                                setState(() {
-                                                                                  hoverlist[index]=true;
-                                                                                });
-                                                                              },
-                                                                              onExit: (value){
-                                                                                setState(() {
-                                                                                  hoverlist[index]=false;
-                                                                                });
+                                                                                return  MouseRegion(
+                                                                                  onEnter: (value){
+                                                                                    setState(() {
+                                                                                      hoverlist[index]=true;
+                                                                                    });
+                                                                                  },
+                                                                                  onExit: (value){
+                                                                                    setState(() {
+                                                                                      hoverlist[index]=false;
+                                                                                    });
 
-                                                                              },
-                                                                              cursor:index!=0? SystemMouseCursors.click:SystemMouseCursors.basic,
+                                                                                  },
+                                                                                  cursor:index!=0? SystemMouseCursors.click:SystemMouseCursors.basic,
 
-                                                                              child: Container(
-                                                                                margin: EdgeInsets.symmetric(horizontal: 3),
-                                                                                child: Stack(
-                                                                                  children: [
-                                                                                    Container(
-                                                                                      padding: EdgeInsets.all(10),
-                                                                                      height: 53,
-                                                                                      width: 53,
-                                                                                      decoration: BoxDecoration(
-                                                                                        color: b3,
-                                                                                        borderRadius: BorderRadius.circular(100),
-                                                                                        border: Border.all(width: 0.7,color: b4,),
+                                                                                  child: Container(
+                                                                                    margin: EdgeInsets.symmetric(horizontal: 3),
+                                                                                    child: Stack(
+                                                                                      children: [
+                                                                                        Container(
+                                                                                          padding: EdgeInsets.all(10),
+                                                                                          height: 53,
+                                                                                          width: 53,
+                                                                                          decoration: BoxDecoration(
+                                                                                            color: b3,
+                                                                                            borderRadius: BorderRadius.circular(100),
+                                                                                            border: Border.all(width: 0.7,color: b4,),
 
-                                                                                      ),
+                                                                                          ),
 
-                                                                                      child: Center(child: Text(profilepic(selectedmembers[index]["name"]),style: getsimplestyle(18, FontWeight.w600, Colors.white),)),
+                                                                                          child: Center(child: Text(profilepic(selectedmembers[index]["name"]),style: getsimplestyle(18, FontWeight.w600, Colors.white),)),
+                                                                                        ),
+                                                                                        hoverlist[index] && index!=0?Container(
+                                                                                          height: 53,
+                                                                                          width: 53,
+                                                                                          decoration: BoxDecoration(
+                                                                                            color: glass.withOpacity(0.3),
+                                                                                            borderRadius: BorderRadius.circular(100),
+                                                                                            border: Border.all(width: 0.7,color: b4,),
+
+                                                                                          ),
+                                                                                          child: IconButton(
+                                                                                              onPressed: (){
+                                                                                                setState(() {
+                                                                                                  groupleader=selectedmembers[0];
+                                                                                                  selectedmembers.removeAt(index);
+                                                                                                  selectedbools[inm]=false;
+                                                                                                });
+
+                                                                                              },icon:Icon(Icons.clear,color: Colors.white,)),
+
+                                                                                        ):Container(),
+
+                                                                                        groupleader["uid"]==selectedmembers[index]["uid"]?Container(
+                                                                                          alignment: Alignment.bottomRight,
+                                                                                          height: 57,
+                                                                                          width: 57,
+                                                                                          child: Container(
+
+                                                                                            height: 20,
+                                                                                            width: 20,
+                                                                                            decoration: BoxDecoration(
+                                                                                                color: b5,
+                                                                                                borderRadius: BorderRadius.circular(20)
+                                                                                            ),
+                                                                                            child: Center(
+                                                                                              child: Text("GL",style: getsimplestyle(12,FontWeight.w500,b1),),
+                                                                                            ),
+                                                                                          ),
+                                                                                        ):Container()
+                                                                                      ],
                                                                                     ),
-                                                                                   hoverlist[index] && index!=0?Container(
-                                                                                      height: 53,
-                                                                                      width: 53,
-                                                                                      decoration: BoxDecoration(
-                                                                                        color: glass.withOpacity(0.3),
-                                                                                        borderRadius: BorderRadius.circular(100),
-                                                                                        border: Border.all(width: 0.7,color: b4,),
-
-                                                                                      ),
-                                                                                      child: IconButton(
-                                                                                          onPressed: (){
-                                                                                            setState(() {
-                                                                                              groupleader=selectedmembers[0];
-                                                                                              selectedmembers.removeAt(index);
-                                                                                              selectedbools[inm]=false;
-                                                                                            });
-
-                                                                                          },icon:Icon(Icons.clear,color: Colors.white,)),
-
-                                                                                    ):Container(),
-
-                                                                                    groupleader["uid"]==selectedmembers[index]["uid"]?Container(
-                                                                                      alignment: Alignment.bottomRight,
-                                                                                      height: 57,
-                                                                                      width: 57,
-                                                                                      child: Container(
-
-                                                                                        height: 20,
-                                                                                        width: 20,
-                                                                                        decoration: BoxDecoration(
-                                                                                            color: b5,
-                                                                                          borderRadius: BorderRadius.circular(20)
-                                                                                        ),
-                                                                                        child: Center(
-                                                                                          child: Text("GL",style: getsimplestyle(12,FontWeight.w500,b1),),
-                                                                                        ),
-                                                                                      ),
-                                                                                    ):Container()
-                                                                                  ],
-                                                                                ),
-                                                                              ),
-                                                                            );
-                                                                          }),
+                                                                                  ),
+                                                                                );
+                                                                              }),
 
                                                                         ),
                                                                       ),
@@ -1108,22 +1111,24 @@ class _proposalState extends State<proposal> {
                                                                         ),
                                                                         child: IconButton(
                                                                             onPressed: selectedmembers.length<=5 && selectedmembers.length>1?(){
-                                                                          if(activeindex==3){
-                                                                            setState(() {
-                                                                              activeindex=0;
-                                                                            });
-                                                                          }else {
-                                                                            setState(() {
-                                                                              activeindex++;
-                                                                            });
-                                                                          }
-                                                                        }:null, icon:Icon(Icons.arrow_forward,color:selectedmembers.length<=5 && selectedmembers.length>1?b3:Colors.grey,)),
+                                                                              if(activeindex==3){
+                                                                                setState(() {
+                                                                                  activeindex=0;
+                                                                                });
+                                                                              }else {
+                                                                                setState(() {
+                                                                                  activeindex++;
+                                                                                });
+                                                                              }
+                                                                            }:null, icon:Icon(Icons.arrow_forward,color:selectedmembers.length<=5 && selectedmembers.length>1?b3:Colors.grey,)),
                                                                         padding: EdgeInsets.all(4),
 
                                                                       ),
                                                                     ],
                                                                   ),
-                                                                )
+                                                                ),
+
+
                                                               ],
                                                             );
                                                           }
@@ -1186,7 +1191,7 @@ class _proposalState extends State<proposal> {
                                                                                       ),
                                                                                     ),
                                                                                       child: child!,
-                                                                                    )
+                                                                                    );
 
                                                                                 }
 
@@ -1858,6 +1863,7 @@ class _proposalState extends State<proposal> {
                                         )
                                     ):Container()
                                   ],
+                                    alignment:Alignment.center
                                 ),
 
 
